@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import Medicine from "../model/Medicine.model.js";
+import Order from "../model/Order.model.js";
 
 export const getMedicinesMedoxer = async (req, res) => {
   const medicines = await Medicine.find();
@@ -23,4 +24,46 @@ export const approveMedicine = async (req, res) => {
     },
   );
   return res.send(updateMedicine);
+};
+
+export const getOrdersMedoxer = async (req, res) => {
+  const orders = await Order.find();
+
+  if (orders) return res.send(orders);
+
+  return res.status(403).send({ message: "Order Not Found" });
+};
+
+export const approveOrder = async (req, res) => {
+  const orderId = new ObjectId(req.params.orderId);
+
+  const order = await Order.findById(orderId);
+
+  if (!order) return res.status(401).send({ message: "Order Not Found" });
+
+  const updateOrder = await Order.findByIdAndUpdate(
+    orderId,
+    { status: "approved" },
+    {
+      new: true,
+    },
+  );
+  return res.send(updateOrder);
+};
+
+export const rejectOrder = async (req, res) => {
+  const orderId = new ObjectId(req.params.orderId);
+
+  const order = await Order.findById(orderId);
+
+  if (!order) return res.status(401).send({ message: "Order Not Found" });
+
+  const updateOrder = await Order.findByIdAndUpdate(
+    orderId,
+    { status: "rejected" },
+    {
+      new: true,
+    },
+  );
+  return res.send(updateOrder);
 };

@@ -27,7 +27,7 @@ app.get("/", (rep, res) => {
   res.sendStatus(200);
 });
 
+db;
 app.listen(app.get("port"), () => {
-  db;
   console.log(`Node app is running at localhost:${app.get("port")}`);
 });

@@ -1,10 +1,10 @@
 import User from "../model/User.model.js";
 
-export const getUsers = async (req, res) => {
+export const getUsersAdmin = async (req, res) => {
   const users = await User.find().select("-password");
   if (users) return res.send(users);
 
-  return res.status(400).send({ message: "No User Found" });
+  return res.status(400).send({ message: "No Users Found" });
 };
 
 export const authorized = async (req, res) => {

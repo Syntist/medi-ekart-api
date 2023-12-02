@@ -6,7 +6,7 @@ import {
   requiredMedoxer,
   requiredProvider,
 } from "../middleware/auth.middleware.js";
-import { authorized, getUsers } from "../controller/admin.controller.js";
+import { authorized, getUsersAdmin } from "../controller/admin.controller.js";
 import {
   createMedicine,
   getMedicinesProvider,
@@ -14,9 +14,16 @@ import {
 } from "../controller/provider.controller.js";
 import {
   approveMedicine,
+  approveOrder,
   getMedicinesMedoxer,
+  getOrdersMedoxer,
+  rejectOrder,
 } from "../controller/medoxer.controller.js";
-import { getMedicinesUser } from "../controller/user.controller.js";
+import {
+  getMedicinesUser,
+  getOrdersUser,
+} from "../controller/user.controller.js";
+import createOrder from "../controller/order.controller.js";
 
 const router = express.Router();
 
@@ -27,10 +34,11 @@ router.get("/checkAuth", requiredAuth);
 // User Routes
 
 router.get("/medicines", requiredAuth, getMedicinesUser);
+router.get("/order", requiredAuth, getOrdersUser);
 
 // Admin Routes
 
-router.get("/admin/users", requiredAuth, requiredAdmin, getUsers);
+router.get("/admin/users", requiredAuth, requiredAdmin, getUsersAdmin);
 router.post(
   "/admin/authorized/:username",
   requiredAuth,
@@ -74,5 +82,22 @@ router.post(
   requiredMedoxer,
   approveMedicine,
 );
+
+router.get("/medoxer/orders", requiredAuth, requiredMedoxer, getOrdersMedoxer);
+router.put(
+  "/medoxer/approveOrder/:orderId",
+  requiredAuth,
+  requiredMedoxer,
+  approveOrder,
+);
+router.put(
+  "/medoxer/rejectOrder/:orderId",
+  requiredAuth,
+  requiredMedoxer,
+  rejectOrder,
+);
+
+// Order
+router.get("/order/create", requiredAuth, createOrder);
 
 export default router;

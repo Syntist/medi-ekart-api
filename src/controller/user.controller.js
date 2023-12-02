@@ -1,6 +1,17 @@
 import { ObjectId } from "mongodb";
 import User from "../model/User.model.js";
 import Medicine from "../model/Medicine.model.js";
+import Order from "../model/Order.model.js";
+
+export const getOrdersUser = async (req, res) => {
+  const { user } = req;
+
+  const order = Order.find({ userId: user._id });
+
+  if (order) return res.send(order);
+
+  return res.status(403).send({ message: "Order Not Found" });
+};
 
 export const getUser = async (req, res) => {
   const id = new ObjectId(req.user.id);

@@ -10,16 +10,16 @@ export const getMedicinesProvider = async (req, res) => {
 };
 
 export const createMedicine = async (req, res) => {
-  const { body } = req;
+  const { body, user } = req;
 
   try {
     const medicine = await Medicine.create({
       ...body,
-      userId: req.user._id,
+      userId: user._id,
       approve: false,
     });
 
-    await User.findByIdAndUpdate(req.user._id, {
+    await User.findByIdAndUpdate(user._id, {
       $push: { medicines: medicine.id },
     });
 
@@ -31,11 +31,11 @@ export const createMedicine = async (req, res) => {
 
 export const updateMedicine = async (req, res) => {
   const medicineId = new ObjectId(req.params.medicineId);
-  const { body } = req;
+  const { body, user } = req;
 
   const medicine = await Medicine.find({
     id: medicineId,
-    userId: req.user._id,
+    userId: user._id,
   });
   if (!medicine) {
     return res.status(401).send({ message: "Not authorized to update" });

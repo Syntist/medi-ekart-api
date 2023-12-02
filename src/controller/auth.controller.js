@@ -45,3 +45,23 @@ export const login = async (req, res) => {
 
   return res.status(404).json({ message: "User Not found" });
 };
+
+export const verifyToken = async (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findOne({ username: decoded.username });
+    if (!user.authorized) return res.status(401);
+
+    req.user = user;
+
+    return res.send(user);
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
+};
