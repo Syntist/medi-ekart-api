@@ -7,11 +7,11 @@ export const register = async (req, res) => {
 
   if (body.type === "admin") res.send(401);
 
-  let accessible = false;
-  if (body.type === "user") accessible = true;
-
   try {
-    const user = await User.create({ ...body, accessible });
+    const user = await User.create({
+      ...body,
+      authorized: body.type === "user",
+    });
     res.send(user);
   } catch (error) {
     res.status(400).send(error);
@@ -24,7 +24,7 @@ export const login = async (req, res) => {
   const user = await User.findOne({ username, password });
 
   if (user) {
-    if (!user.accessible) {
+    if (!user.authorized) {
       return res
         .status(401)
         .send({ message: "User not authorized, contact support" });

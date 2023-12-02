@@ -26,13 +26,19 @@ const userSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ["admin", "user", "supplier", "modexer"],
+    enum: ["admin", "user", "provider", "modexer"],
     required: true,
   },
-  accessible: {
+  authorized: {
     type: Boolean,
     default: false, // Set a default value if needed
   },
+  medicines: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Medicine",
+    },
+  ],
 });
 
 const User = model("User", userSchema);
