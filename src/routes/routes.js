@@ -61,7 +61,7 @@ router.post(
   requiredProvider,
   createMedicine,
 );
-router.put(
+router.post(
   "/provider/updateMedicine/:medicineId",
   requiredAuth,
   requiredProvider,
@@ -84,13 +84,13 @@ router.post(
 );
 
 router.get("/medoxer/orders", requiredAuth, requiredMedoxer, getOrdersMedoxer);
-router.put(
+router.post(
   "/medoxer/approveOrder/:orderId",
   requiredAuth,
   requiredMedoxer,
   approveOrder,
 );
-router.put(
+router.post(
   "/medoxer/rejectOrder/:orderId",
   requiredAuth,
   requiredMedoxer,
@@ -98,6 +98,6 @@ router.put(
 );
 
 // Order
-router.get("/order/create", requiredAuth, createOrder);
+router.post("/order/create", requiredAuth, createOrder);
 
 export default router;

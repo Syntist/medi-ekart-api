@@ -21,6 +21,9 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  prescriptionUrl: {
+    type: String,
+  },
   orderDate: {
     type: Date,
     default: Date.now,
@@ -81,7 +84,9 @@ orderSchema.pre("save", async function (next) {
       populatedMedicines.map(async (item) => {
         const { medicine, quantity } = item;
 
-        if (medicine.stock < quantity) {
+        if (medicine.prescriptionRequired && !this.prescriptionUrl) {
+          throw new Error(`Prescription Required for ${medicine.name}`);
+        } else if (medicine.stock < quantity) {
           throw new Error(`Insufficient stock for ${medicine.name}`);
         }
 

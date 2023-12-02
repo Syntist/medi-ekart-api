@@ -4,7 +4,8 @@ import Order from "../model/Order.model.js";
 const createOrder = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { medicines } = req.body;
+    const { body } = req;
+    const { medicines } = body;
 
     const areAllMedicinesApproved = await Promise.all(
       medicines.map(async (med) => {
@@ -21,6 +22,7 @@ const createOrder = async (req, res) => {
 
     const order = new Order({
       userId,
+      ...body,
       medicines: medicines.map((med) => ({
         medicine: med.medicineId,
         quantity: med.quantity,
@@ -34,7 +36,7 @@ const createOrder = async (req, res) => {
       .status(201)
       .json({ message: "Order created successfully", order });
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send(error.message);
   }
 };
 
