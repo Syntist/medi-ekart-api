@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import Medicine from "../model/Medicine.model.js";
 import Order from "../model/Order.model.js";
 
@@ -9,7 +10,8 @@ const createOrder = async (req, res) => {
 
     const areAllMedicinesApproved = await Promise.all(
       medicines.map(async (med) => {
-        const medicine = await Medicine.findById(med.medicineId);
+        const medicine = await Medicine.findById(new ObjectId(med.medicineId));
+
         return medicine && medicine.approved;
       }),
     );

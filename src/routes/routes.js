@@ -40,7 +40,7 @@ router.get("/verifyLogin", verifyToken);
 // User Routes
 
 router.get("/medicines", requiredAuth, getMedicinesUser);
-router.get("/order", requiredAuth, getOrdersUser);
+router.get("/orders", requiredAuth, getOrdersUser);
 
 // Admin Routes
 

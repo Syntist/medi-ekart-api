@@ -5,10 +5,12 @@ import Order from "../model/Order.model.js";
 
 export const getOrdersUser = async (req, res) => {
   const { user } = req;
+  const orders = await Order.find({ userId: user._id }).populate({
+    path: "medicines.medicine",
+    model: "Medicine",
+  });
 
-  const order = Order.find({ userId: user._id });
-
-  if (order) return res.send(order);
+  if (orders) return res.send(orders);
 
   return res.status(403).send({ message: "Order Not Found" });
 };

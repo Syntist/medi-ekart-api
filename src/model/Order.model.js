@@ -53,6 +53,14 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  insuranceCompany: {
+    type: String, // Adjust the type based on your requirements
+    required: true,
+  },
+  policyNumber: {
+    type: String, // Adjust the type based on your requirements
+    required: true,
+  },
 });
 
 orderSchema.pre("save", async function (next) {
@@ -79,7 +87,6 @@ orderSchema.pre("save", async function (next) {
 
     this.totalPrice = total;
 
-    // Update the stock and perform other checks as before
     await Promise.all(
       populatedMedicines.map(async (item) => {
         const { medicine, quantity } = item;
@@ -109,13 +116,10 @@ orderSchema.pre("findOneAndUpdate", async function (next) {
     if (update && update.status === "approved") {
       update.status = "shipped";
 
-      // Perform any additional actions related to the transition
       console.log(`Order ${this.getQuery()._id} is being updated to shipped.`);
     } else if (update && update.status === "rejected") {
-      // Fetch the order details before the update
       const existingOrder = await this.model.findById(orderId);
 
-      // Perform actions based on the existing order before the update
       await Promise.all(
         existingOrder.medicines.map(async (item) => {
           const medicine = await Medicine.findById(item.medicine);
