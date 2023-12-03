@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Medicine from "./Medicine.model.js";
+import { generateShippingLabel } from "../utils/shippingLabel.js";
 
 const orderSchema = new mongoose.Schema({
   userId: {
@@ -53,6 +54,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  state: {
+    type: String,
+    required: true,
+  },
   insuranceCompany: {
     type: String, // Adjust the type based on your requirements
     required: true,
@@ -60,6 +65,12 @@ const orderSchema = new mongoose.Schema({
   policyNumber: {
     type: String, // Adjust the type based on your requirements
     required: true,
+  },
+  trackingNumber: {
+    type: String,
+  },
+  label: {
+    type: String,
   },
 });
 
@@ -114,6 +125,22 @@ orderSchema.pre("findOneAndUpdate", async function (next) {
     const orderId = this.getQuery()._id;
 
     if (update && update.status === "approved") {
+      const order = await this.model.findById(orderId).populate("userId");
+
+      const shipInfo = {
+        name: `${order.userId.firstName} ${order.userId.lastName}`,
+        address_line1: order.address,
+        city_locality: order.city,
+        state_province: order.state,
+        postal_code: order.zipCode,
+        country_code: "US",
+        address_residential_indicator: "yes",
+      };
+
+      const label = await generateShippingLabel(shipInfo);
+
+      update.trackingNumber = label.tracking_number;
+      update.label = label.label_download.pdf;
       update.status = "shipped";
 
       console.log(`Order ${this.getQuery()._id} is being updated to shipped.`);
