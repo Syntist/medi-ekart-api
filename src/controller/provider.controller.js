@@ -9,6 +9,17 @@ export const getMedicinesProvider = async (req, res) => {
   return res.status(400).send({ message: "No Medicines Found" });
 };
 
+export const getMedicineProvider = async (req, res) => {
+  const medicineId = new ObjectId(req.params.medicineId);
+  const medicine = await Medicine.findOne({
+    _id: medicineId,
+    userId: req.user._id,
+  });
+  if (medicine) return res.send(medicine);
+
+  return res.status(400).send({ message: "No Medicine Found" });
+};
+
 export const createMedicine = async (req, res) => {
   const { body, user } = req;
 
@@ -34,7 +45,7 @@ export const updateMedicine = async (req, res) => {
   const { body, user } = req;
 
   const medicine = await Medicine.find({
-    id: medicineId,
+    _id: medicineId,
     userId: user._id,
   });
   if (!medicine) {

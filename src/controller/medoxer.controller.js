@@ -26,8 +26,28 @@ export const approveMedicine = async (req, res) => {
   return res.send(updateMedicine);
 };
 
+export const rejectMedicine = async (req, res) => {
+  const medicineId = new ObjectId(req.params.medicineId);
+
+  const medicine = await Medicine.findById(medicineId);
+
+  if (!medicine) return res.status(401).send({ message: "Medicine Not Found" });
+
+  const updateMedicine = await Medicine.findByIdAndUpdate(
+    medicineId,
+    { approved: false },
+    {
+      new: true,
+    },
+  );
+  return res.send(updateMedicine);
+};
+
 export const getOrdersMedoxer = async (req, res) => {
-  const orders = await Order.find();
+  const orders = await Order.find().populate({
+    path: "medicines.medicine",
+    model: "Medicine",
+  });
 
   if (orders) return res.send(orders);
 

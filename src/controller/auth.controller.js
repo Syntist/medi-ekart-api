@@ -40,14 +40,15 @@ export const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    return res.send({ id: user.id, token });
+
+    return res.send({ user, token });
   }
 
   return res.status(404).json({ message: "User Not found" });
 };
 
 export const verifyToken = async (req, res) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt || req.headers["token"];
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");

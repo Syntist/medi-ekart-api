@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../model/User.model.js";
 
 export const requiredAuth = async (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt || req.headers["token"];
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");

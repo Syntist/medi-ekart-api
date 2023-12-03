@@ -107,7 +107,7 @@ orderSchema.pre("findOneAndUpdate", async function (next) {
     const orderId = this.getQuery()._id;
 
     if (update && update.status === "approved") {
-      this.findOneAndUpdate({}, { $set: { status: "shipped" } });
+      update.status = "shipped";
 
       // Perform any additional actions related to the transition
       console.log(`Order ${this.getQuery()._id} is being updated to shipped.`);

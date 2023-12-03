@@ -12,6 +12,7 @@
         "import/prefer-default-export": "off",
         "quotes": [2, "double"],
         "import/extensions": ["error", "always", {"ignorePackages": true} ],
-        "no-underscore-dangle": ["off"]
+        "no-underscore-dangle": ["off"],
+        "dot-notation": ["off"]
     }
 }

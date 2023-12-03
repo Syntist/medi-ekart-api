@@ -22,3 +22,19 @@ export const authorized = async (req, res) => {
 
   return res.send(update);
 };
+
+export const unauthorized = async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username });
+
+  if (!user) return res.sendStatus(404);
+
+  const update = await User.updateOne(
+    { username },
+    {
+      authorized: false,
+    },
+  );
+
+  return res.send(update);
+};
