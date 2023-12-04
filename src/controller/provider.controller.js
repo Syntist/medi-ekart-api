@@ -27,7 +27,7 @@ export const createMedicine = async (req, res) => {
     const medicine = await Medicine.create({
       ...body,
       userId: user._id,
-      approve: false,
+      approved: false,
     });
 
     await User.findByIdAndUpdate(user._id, {
