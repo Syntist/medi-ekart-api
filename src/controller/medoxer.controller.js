@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import Medicine from "../model/Medicine.model.js";
 import Order from "../model/Order.model.js";
+import { checkPurchase } from "../utils/stripe.js";
 
 export const getMedicinesMedoxer = async (req, res) => {
   const medicines = await Medicine.find();
@@ -44,10 +45,13 @@ export const rejectMedicine = async (req, res) => {
 };
 
 export const getOrdersMedoxer = async (req, res) => {
-  const orders = await Order.find().populate({
-    path: "medicines.medicine",
-    model: "Medicine",
-  });
+  const orders = await Order.find().populate([
+    {
+      path: "medicines.medicine",
+      model: "Medicine",
+    },
+    "userId",
+  ]);
 
   if (orders) return res.send(orders);
 
@@ -61,14 +65,18 @@ export const approveOrder = async (req, res) => {
 
   if (!order) return res.status(401).send({ message: "Order Not Found" });
 
-  const updateOrder = await Order.findByIdAndUpdate(
-    orderId,
-    { status: "approved" },
-    {
-      new: true,
-    },
-  );
-  return res.send(updateOrder);
+  if (await checkPurchase(orderId.toString())) {
+    const updateOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { status: "approved" },
+      {
+        new: true,
+      },
+    );
+    return res.send(updateOrder);
+  }
+
+  return res.status(401).send({ message: "Could not Approve at the Moment" });
 };
 
 export const rejectOrder = async (req, res) => {

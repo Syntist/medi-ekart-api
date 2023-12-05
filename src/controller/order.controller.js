@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import Medicine from "../model/Medicine.model.js";
 import Order from "../model/Order.model.js";
+import { stripPayment } from "../utils/stripe.js";
 
 const createOrder = async (req, res) => {
   try {
@@ -32,11 +33,19 @@ const createOrder = async (req, res) => {
       status: "pending",
     });
 
+    const link = await stripPayment(
+      await order.populate([
+        "userId",
+        {
+          path: "medicines.medicine",
+          model: "Medicine",
+        },
+      ]),
+    );
+
     await order.save();
 
-    return res
-      .status(201)
-      .json({ message: "Order created successfully", order });
+    return res.status(201).json({ url: link.url });
   } catch (error) {
     return res.status(500).send(error.message);
   }

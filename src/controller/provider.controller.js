@@ -54,7 +54,7 @@ export const updateMedicine = async (req, res) => {
 
   const update = await Medicine.findByIdAndUpdate(
     medicineId,
-    { ...body, approve: false },
+    { ...body, approved: false },
     {
       new: true,
     },

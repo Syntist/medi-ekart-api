@@ -11,6 +11,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.2",
+    "strip": "^3.0.0",
     "stripe": "^13.8.0"
   },
   "scripts": {
