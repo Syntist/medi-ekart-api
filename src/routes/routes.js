@@ -28,6 +28,8 @@ import {
 import {
   getMedicinesUser,
   getOrdersUser,
+  getUser,
+  updateUser,
 } from "../controller/user.controller.js";
 import createOrder from "../controller/order.controller.js";
 
@@ -41,6 +43,8 @@ router.get("/verifyLogin", verifyToken);
 
 router.get("/medicines", requiredAuth, getMedicinesUser);
 router.get("/orders", requiredAuth, getOrdersUser);
+router.get("/user", requiredAuth, getUser);
+router.post("/user/update", requiredAuth, updateUser);
 
 // Admin Routes
 
