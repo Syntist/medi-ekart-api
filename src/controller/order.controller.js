@@ -43,7 +43,7 @@ const createOrder = async (req, res) => {
       ]),
     );
 
-    await order.save();
+    // await order.save();
 
     return res.status(201).json({ url: link.url });
   } catch (error) {

@@ -60,11 +60,9 @@ const orderSchema = new mongoose.Schema({
   },
   insuranceCompany: {
     type: String, // Adjust the type based on your requirements
-    required: true,
   },
   policyNumber: {
     type: String, // Adjust the type based on your requirements
-    required: true,
   },
   trackingNumber: {
     type: String,

@@ -3,6 +3,7 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 export const stripPayment = async (order) => {
+  console.log(order.insuranceCompany);
   try {
     const session = await stripe.checkout.sessions.create({
       customer_email: order.userId.username,
@@ -19,7 +20,9 @@ export const stripPayment = async (order) => {
       line_items: order.medicines.map((item) => ({
         price_data: {
           currency: "usd",
-          unit_amount: item.medicine.price * 100,
+          unit_amount: order.insuranceCompany
+            ? item.medicine.price * 100 - item.medicine.price * 100 * 0.2
+            : item.medicine.price * 100,
           product_data: {
             name: item.medicine.name,
           },
