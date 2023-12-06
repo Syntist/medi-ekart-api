@@ -43,13 +43,9 @@ export const stripPayment = async (order) => {
 export const checkPurchase = async (orderId) => {
   if (!orderId) return false;
 
-  console.log(orderId);
-
   const invoice = await stripe.invoices.search({
     query: `status:"paid" AND metadata["order_id"]: "${orderId}"`,
   });
-
-  console.log(invoice);
 
   if (invoice?.data[0]?.status === "paid") return true;
 

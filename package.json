@@ -18,10 +18,8 @@
     "start": "nodemon src/index.js"
   },
   "type": "module",
-  "name": "courses-backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://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@github.com/6ix-Inc/courses.6ix.com-Backend.git",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^8.2.0",
